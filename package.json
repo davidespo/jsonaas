@@ -8,8 +8,8 @@
     "start": "node src/main.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "MIT",
+  "author": "David Esposito",
+  "license": "Apache License 2.0",
   "dependencies": {
     "axios": "^0.21.0",
     "cors": "^2.8.5",
