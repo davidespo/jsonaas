@@ -1,7 +1,6 @@
 // https://www.npmjs.com/package/snap-db
 const { SnapDB } = require('snap-db');
 
-const MAIN_NAMESPACE = 'main';
 const NS_CACHE = {};
 
 function getDb(namespace) {
@@ -15,6 +14,5 @@ function getDb(namespace) {
 }
 
 module.exports = {
-  MAIN_NAMESPACE,
   getDb,
 };
