@@ -1,9 +1,38 @@
 const { nanoid } = require('nanoid');
+const { get, put } = require('../db');
 
-const ADMIN_KEY = process.env.ADMIN_KEY || nanoid(44);
-console.log(`ADMIN_KEY=${ADMIN_KEY}`);
-const WRITE_KEY = process.env.WRITE_KEY;
-const READ_KEY = process.env.READ_KEY;
+const AUTH_NS = 'internal.auth';
+const ADMIN_KEY = 'ADMIN_KEY';
+const READ_KEY = 'READ_KEY';
+const WRITE_KEY = 'WRITE_KEY';
+const keys = {};
+
+async function initApiKey(kind) {
+  let apiKey = process.env[kind];
+  if (!!apiKey) {
+    await put(AUTH_NS, kind, apiKey);
+  } else {
+    apiKey = (await get(AUTH_NS, kind)).value;
+    if (!apiKey) {
+      apiKey = nanoid(32);
+      await put(AUTH_NS, kind, apiKey);
+    }
+  }
+  console.log(`${kind}=${apiKey}`);
+  keys[kind] = apiKey;
+  return apiKey;
+}
+
+async function initOptionalApiKey(kind) {
+  let apiKey = process.env[kind] || null;
+  console.log(`${kind}=${apiKey}`);
+  keys[kind] = apiKey;
+  return apiKey;
+}
+
+initApiKey(ADMIN_KEY);
+initOptionalApiKey(READ_KEY);
+initOptionalApiKey(WRITE_KEY);
 
 function apikeyAuth(req, res, next) {
   const qKey = req.query['apikey'];
@@ -14,13 +43,13 @@ function apikeyAuth(req, res, next) {
     switch (req.method) {
       case 'OPTION':
       case 'GET': {
-        if (!READ_KEY || READ_KEY === qKey) {
+        if (!keys[READ_KEY] || keys[READ_KEY] === qKey) {
           next();
           return;
         }
       }
       default: {
-        if (!WRITE_KEY || WRITE_KEY === qKey) {
+        if (!keys[WRITE_KEY] || keys[WRITE_KEY] === qKey) {
           next();
           return;
         }
