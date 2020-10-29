@@ -15,7 +15,7 @@ const list = async (namespace, limit, offset) => {
   const data = await db.queryIt(options);
   const content = [];
   for await (let [key, value] of data) {
-    results.push({
+    content.push({
       ...JSON.parse(value),
       key,
       namespace,

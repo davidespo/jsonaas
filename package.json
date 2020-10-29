@@ -5,7 +5,9 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "nodemon --watch src src/main.js",
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "docker:build": "docker build -t davidespo/jsonaas .",
+    "docker:run": "docker run -p 13000:3000 davidespo/jsonaas"
   },
   "keywords": [],
   "author": "David Esposito",
