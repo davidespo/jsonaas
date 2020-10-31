@@ -4,7 +4,7 @@
   "description": "JSON as a Service",
   "main": "src/main.js",
   "scripts": {
-    "dev": "nodemon --watch src src/main.js",
+    "dev": "PORT=8080 nodemon --watch src src/main.js",
     "start": "node src/main.js",
     "docker:build": "docker build -t davidespo/jsonaas .",
     "docker:run": "docker run -p 13000:3000 davidespo/jsonaas"
@@ -14,6 +14,7 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "axios": "^0.21.0",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "nanoid": "^3.1.15",

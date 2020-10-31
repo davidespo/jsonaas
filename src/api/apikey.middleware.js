@@ -1,21 +1,23 @@
 const { nanoid } = require('nanoid');
-const { get, put } = require('../db');
+const { jaas } = require('../db');
 
 const AUTH_NS = 'internal.auth';
+
 const ADMIN_KEY = 'ADMIN_KEY';
 const READ_KEY = 'READ_KEY';
 const WRITE_KEY = 'WRITE_KEY';
 const keys = {};
 
 async function initApiKey(kind) {
+  const ns = await jaas.ns(AUTH_NS);
   let apiKey = process.env[kind];
   if (!!apiKey) {
-    await put(AUTH_NS, kind, apiKey);
+    await ns.put(kind, apiKey);
   } else {
-    apiKey = (await get(AUTH_NS, kind)).value;
+    apiKey = await ns.get(kind);
     if (!apiKey) {
       apiKey = nanoid(32);
-      await put(AUTH_NS, kind, apiKey);
+      await ns.put(kind, apiKey);
     }
   }
   console.log(`${kind}=${apiKey}`);

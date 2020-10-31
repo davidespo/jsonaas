@@ -13,6 +13,4 @@ function getDb(namespace) {
   return nsDb;
 }
 
-module.exports = {
-  getDb,
-};
+module.exports = { getDb };

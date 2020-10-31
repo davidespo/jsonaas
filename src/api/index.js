@@ -1,16 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const apikeyAuth = require('./apikeyMiddleware');
-const collectionRoutes = require('./collectionRoutes.js');
-const infoRoutes = require('./infoRoutes.js');
+const bodyParser = require('body-parser');
+const apikeyAuth = require('./apikey.middleware');
+const routes = [
+  require('./data.routes.js'),
+  require('./infoRoutes.js'),
+  require('./namespace.routes.js'),
+];
 
 function init(app) {
-  app.use(express.json());
+  app.use(express.json({ type: '*/*', strict: false }));
   app.use(cors());
   app.use(apikeyAuth());
 
-  collectionRoutes.init(app);
-  infoRoutes.init(app);
+  routes.forEach((r) => r.init(app));
 }
 
 function start() {
